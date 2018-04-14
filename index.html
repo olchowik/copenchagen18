@@ -115,43 +115,43 @@
           var time = date.toLocaleTimeString();
           $('#chattimer').text(n+' '+time)
         });
-        let questions=[
-          "The Referendum was not influenced by Cambridge Analytica",
-          "The Referendum was influenced by Cambridge Analytica",
-          "The Referendum was not influenced by Facebook",
-          "The Referendum was influenced by Facebook",
-          "The Referendum was influenced by Russians",
-          "The Referendum was influenced by aliens",
-          "The Referendum was influenced by vegans",
-          "The Referendum was influenced by cyclists",
-          "Leaving EU will save Britons from vegans",
-          "Leaving EU will save money",
-          "Leaving EU will improve security",
-          "Leaving EU will attract investors",
-          "Leaving EU will attract vegans",
-          "Leaving EU will attract vegans",
-          "Leaving EU will attract Russians"
-        ]
+      let questions=[
+        "The Referendum was not influenced by Cambridge Analytica",
+        "The Referendum was influenced by Cambridge Analytica",
+        "The Referendum was not influenced by Facebook",
+        "The Referendum was influenced by Facebook",
+        "The Referendum was influenced by Russians",
+        "The Referendum was influenced by aliens",
+        "The Referendum was influenced by vegans",
+        "The Referendum was influenced by cyclists",
+        "Leaving EU will save Britons from vegans",
+        "Leaving EU will save money",
+        "Leaving EU will improve security",
+        "Leaving EU will attract investors",
+        "Leaving EU will attract vegans",
+        "Leaving EU will attract vegans",
+        "Leaving EU will attract Russians"
+      ]
 
-        const solution1=["The Referendum","Leaving EU", "The British Parliment"]
+      const solution1=["The Referendum","Leaving EU", "The British Parliment"]
 
-        const solution31=["Cambridge Analytica", "Russians", "Facebook", "aliens", "vegans", "cyclists"]
-        const solution32=["money", "people from dying","the Queen","Britons from vegans","Britons from migrants"]
-        const solution33=["security"]
-        const solution34=["investors", "Russians", "aliens", "vegans", "cyclists"]
-        const solution35=["jobs", "travel problems"]
-        
-        const solution2=[
-          {text:"was not influenced by",children:solution31}, 
-          {text:"was influenced by",children:solution31}, 
-          {text:"will save", children:solution32}, 
-          {text:"will improve", children:solution33},
-          {text:"will attract",children:solution34},
-          {text:"will repel",children:solution34 },
-          {text:"will generate",children:solution35}
-        ]
-       
-        //var item = items[Math.floor(Math.random()*items.length)];
+      const solution31=["Cambridge Analytica", "Russians", "Facebook", "aliens", "vegans", "cyclists"]
+      const solution32=["money", "people from dying","the Queen","Britons from vegans","Britons from migrants"]
+      const solution33=["security"]
+      const solution34=["investors", "Russians", "aliens", "vegans", "cyclists"]
+      const solution35=["jobs", "travel problems"]
+      
+      const solution2=[
+        {text:"was not influenced by",children:solution31}, 
+        {text:"was influenced by",children:solution31}, 
+        {text:"will save", children:solution32}, 
+        {text:"will improve", children:solution33},
+        {text:"will attract",children:solution34},
+        {text:"will repel",children:solution34 },
+        {text:"will generate",children:solution35}
+      ]
+      
+      //var item = items[Math.floor(Math.random()*items.length)];
 
         
         $('form').submit(function(){
