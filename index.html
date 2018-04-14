@@ -76,13 +76,15 @@
         }
         return array;
       }
-      
+      var socket = io();
       function onQuestionPicked(e){
        // console.log($(e.target).text());
-        $('#MessagePicked').text('Message to pass: '+$(e.target).text());
+        const msg = $(e.target).text();
+        $('#MessagePicked').text('Message to pass: '+msg);
         $('#pickMessage').hide();
         $('#MessagePicked').show();
-                  //sends to server
+        socket.emit("riddle", msg);
+                  
       }
 
       function showQuestions(questions){
@@ -94,7 +96,6 @@
           $('#m1').on('click',onQuestionPicked)
           $('#m2').on('click',onQuestionPicked)
           $('#m3').on('click',onQuestionPicked)
-
           $('#pickMessage').show();
       }
 
@@ -141,13 +142,10 @@
           {text:"will repel",children:solution34 },
           {text:"will generate",children:solution35}
         ]
-        showQuestions(questions);
-
-
-        // console.log(questions);
+       
         //var item = items[Math.floor(Math.random()*items.length)];
 
-        var socket = io();
+        
         $('form').submit(function(){
           message = $('#m').val();
           messageType = 'chat message';
@@ -172,8 +170,10 @@
         // Show different UI based on knower / guesser role.
         socket.on('control', function(msg) {
           if (msg === "youAreGuessing") {
+           //showAnswers(questions);
             console.log("You are guessing");
           } else if (msg === "youAreKnowing") {
+            showQuestions(questions);
             console.log("You are knowing");
           }
         });
