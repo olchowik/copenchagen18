@@ -68,6 +68,13 @@ io.on('connection', function(socket){
       socketsByUserId[thisUserId].emit('control', 'knowingUserCantSendRiddle');
     }
   });
+
+  socket.on('disconnect', (reason) => {
+    if (matchedUserId[thisUserId]) {
+      socketsByUserId[matchedUserId[thisUserId]].emit('control', 'otherUserDisconnected');
+      matchedUserId[matchedUserId[thisUserId]] = null;
+    }
+  });
 });
 
 http.listen(port, function(){
