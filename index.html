@@ -2,6 +2,7 @@
 //http://webdeveloperguy.blogspot.dk/
 <html>
   <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Socket.IO chat</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,16 +17,41 @@
     </style>
   </head>
   <body>
+    <div>
+      Pick a message:
+      <button id="m1" type="button" class="btn btn-primary">Primary</button>
+      <button id="m2" type="button" class="btn btn-secondary">Secondary</button>
+      <button id="m3" type="button" class="btn btn-success">Success</button>
+    </div>
     <ul id="messages"></ul>
+    ------------------------
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     <script>
+      function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        // While there remain elements to shuffle..
+        while (0 !== currentIndex) {
+          // Pick a remaining element...
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          // And swap it with the current element.
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+      }
       $(function () {
         
-        const questions=[
+        let questions=[
           "The Referendum was not influenced by Cambridge Analytica",
           "The Referendum was influenced by Cambridge Analytica",
           "The Referendum was not influenced by Facebook",
@@ -52,7 +78,13 @@
           {text:"will repel",children:solution34 },
           {text:"will generate",children:solution35}
         ]
-
+        questions = shuffle(questions);
+        let candidateQuestions = questions.slice(0, 3);
+        $('#m1').text(candidateQuestions[0]);
+        $('#m2').text(candidateQuestions[1]);
+        $('#m3').text(candidateQuestions[2]);
+        // console.log(questions);
+        //var item = items[Math.floor(Math.random()*items.length)];
 
         var socket = io();
         $('form').submit(function(){
