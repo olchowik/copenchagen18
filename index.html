@@ -56,7 +56,18 @@
 
         var socket = io();
         $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
+          message = $('#m').val();
+          messageType = 'chat message';
+          if (message.startsWith("__CONTROL__")) {
+            messageType = 'control';
+          }
+          if (message.startsWith("__RIDDLE__")) {
+            messageType = 'riddle';
+          }
+          if (message.startsWith("__SOLUTION__")) {
+            messageType = 'solution';
+          }
+          socket.emit(messageType, message.replace(/^__.*__/, ''));
           $('#m').val('');
           return false;
         });
@@ -64,8 +75,19 @@
           $('#messages').append($('<li>').text(msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
+
+        // Displaying other types of messages - debugging only now, this needs to be translated
+        // to events in the UI.
         socket.on('control', function(msg){
-          $('#messages').append($('<li>').text("<b>" + msg + "</b>"));
+          $('#messages').append($('<li>').text("CONTROL: " + msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        socket.on('riddle', function(msg){
+          $('#messages').append($('<li>').text("RIDDLE: " + msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        socket.on('solution', function(msg){
+          $('#messages').append($('<li>').text("SOLUTION: " + msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
 
