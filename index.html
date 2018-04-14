@@ -24,6 +24,36 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function () {
+        
+        const questions=[
+          "The Referendum was not influenced by Cambridge Analytica",
+          "The Referendum was influenced by Cambridge Analytica",
+          "The Referendum was not influenced by Facebook",
+          "The Referendum was influenced by Facebook",
+          "The Referendum was not influenced by Russians",
+          "The Referendum was influenced by Russians",
+          "Leaving EU will save Britons from vegans"
+        ]
+
+        const solution1=["The Referendum","Leaving EU", "The British Parliment"]
+
+        const solution31=["Cambridge Analytica", "Russians", "Facebook", "aliens", "vegans", "cyclists"]
+        const solution32=["money", "people from dying","the Queen","Britons from vegans","Britons from migrants"]
+        const solution33=["security"]
+        const solution34=["investors", "Russians", "aliens", "vegans", "cyclists"]
+        const solution35=["jobs", "travel problems"]
+        
+        const solution2=[
+          {text:"was not influenced by",children:solution31}, 
+          {text:"was influenced by",children:solution31}, 
+          {text:"will save", children:solution32}, 
+          {text:"will improve", children:solution33},
+          {text:"will attract",children:solution34},
+          {text:"will repel",children:solution34 },
+          {text:"will generate",children:solution35}
+        ]
+
+
         var socket = io();
         $('form').submit(function(){
           socket.emit('chat message', $('#m').val());
