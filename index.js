@@ -7,7 +7,9 @@ var nextUserId = 1;
 var socketsByUserId = {}
 var matchedUserId = {}
 var userWaitingForMatch = null;
-
+var knowingUsers = [];
+var guessingUsers = [];
+var riddleForKnowingUser = {};
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -17,6 +19,7 @@ io.on('connection', function(socket){
   var thisUserId = nextUserId++;
   socketsByUserId[thisUserId] = socket;
   if (userWaitingForMatch) {
+    guessingUsers.push(thisUserId);
     matchedUserId[userWaitingForMatch] = thisUserId;
     matchedUserId[thisUserId] = userWaitingForMatch;
 
@@ -25,6 +28,7 @@ io.on('connection', function(socket){
 
     userWaitingForMatch = null;
   } else {
+    knowingUsers.push(thisUserId);
     userWaitingForMatch = thisUserId;
   }
 
@@ -37,8 +41,29 @@ io.on('connection', function(socket){
     }
   });
 
+  socket.on('riddle', function(msg){
+    if (knowingUsers.indexOf(thisUserId) >= 0) {
+      riddleForKnowingUser[thisUserId] = msg;
+    } else {
+      socketsByUserId[thisUserId].emit('control', 'guessingUserCantChooseRiddle');
+    }
+  });
 
-
+  socket.on('solution', function(msg){
+    if (guessingUsers.indexOf(thisUserId) >= 0) {
+      var guessResult;
+      if (riddleForKnowingUser[matchedUserId[thisUserId]] === msg) {
+        guessResult = "guessedCorrectly";
+      } else {
+        guessResult = "guessedIncorrectly";
+      }
+      socketsByUserId[matchedUserId[thisUserId]].emit('control', guessResult);
+      socketsByUserId[thisUserId].emit('control', guessResult);
+      
+    } else {
+      socketsByUserId[thisUserId].emit('control', 'knowingUserCantSendRiddle');
+    }
+  });
 });
 
 http.listen(port, function(){
