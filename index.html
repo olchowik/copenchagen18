@@ -1,5 +1,5 @@
 <!doctype html>
-//http://webdeveloperguy.blogspot.dk/
+
 <html>
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -7,27 +7,57 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      //form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      //form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      //form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
       #messages { margin-bottom: 40px }
+      .qb {
+        margin:auto; 
+        min-width:700px;
+        }
+      #chattimer {
+        float:right;
+      }
     </style>
   </head>
   <body>
-    <div>
-      Pick a message:
-      <button id="m1" type="button" class="btn btn-primary">Primary</button>
-      <button id="m2" type="button" class="btn btn-secondary">Secondary</button>
-      <button id="m3" type="button" class="btn btn-success">Success</button>
+    <div class="container">
+      <div class="card  mt-3">
+          <div id="chatheader" class="card-header">
+            <span class="chatlogo">
+              You are talking to: [retracted]
+            </span>
+            <span id="chattimer"></span>
+          </div>
+        <div id="hello"  class="card-body border-bottom">
+          <div id="pickMessage" class="text-center" style="display:none;">
+            <h5 class="card-title">Pick a message:</h5>
+            <button id="m1" type="button" class="d-block btn btn-lg btn-primary my-1 qb" style="margin:auto; min-width:700px">Primary</button>
+            <button id="m2" type="button" class="d-block btn btn-lg btn-secondary my-1 qb" style="margin:auto">Secondary</button>
+            <button id="m3" type="button" class="d-block btn btn-lg btn-success my-1 qb" style="margin:auto">Success</button>
+          </div>
+          <div id="MessagePicked"  style="display:none;">
+            Message to pass: 
+          </div>
+        </div>
+          <div id="chatwindow"  class="card-body">
+              <ul id="messages"></ul>    
+          </div>
+      
+          <div id="formwindow"  class="card-body">
+            <form action="">
+              <input id="m" autocomplete="off" /><button>Send</button>
+            </form>
+          </div>
+          <div class="card-footer text-muted">
+              Censorship simulator made at Nordic Game Jam.
+          </div>
     </div>
-    <ul id="messages"></ul>
-    ------------------------
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    </div>
+
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -37,28 +67,61 @@
     <script>
       function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
-        // While there remain elements to shuffle..
         while (0 !== currentIndex) {
-          // Pick a remaining element...
           randomIndex = Math.floor(Math.random() * currentIndex);
           currentIndex -= 1;
-          // And swap it with the current element.
           temporaryValue = array[currentIndex];
           array[currentIndex] = array[randomIndex];
           array[randomIndex] = temporaryValue;
         }
         return array;
       }
+      
+      function onQuestionPicked(e){
+       // console.log($(e.target).text());
+        $('#MessagePicked').text('Message to pass: '+$(e.target).text());
+        $('#pickMessage').hide();
+        $('#MessagePicked').show();
+                  //sends to server
+      }
+
+      function showQuestions(questions){
+          questions = shuffle(questions);
+          let candidateQuestions = questions.slice(0, 3);
+          $('#m1').text(candidateQuestions[0]);
+          $('#m2').text(candidateQuestions[1]);
+          $('#m3').text(candidateQuestions[2]);
+          $('#m1').on('click',onQuestionPicked)
+          $('#m2').on('click',onQuestionPicked)
+          $('#m3').on('click',onQuestionPicked)
+
+          $('#pickMessage').show();
+      }
+
       $(function () {
-        
+
+        timerId=setInterval(e=>{
+          var date = new Date();
+          var n = date.toDateString();
+          var time = date.toLocaleTimeString();
+          $('#chattimer').text(n+' '+time)
+        });
         let questions=[
           "The Referendum was not influenced by Cambridge Analytica",
           "The Referendum was influenced by Cambridge Analytica",
           "The Referendum was not influenced by Facebook",
           "The Referendum was influenced by Facebook",
-          "The Referendum was not influenced by Russians",
           "The Referendum was influenced by Russians",
-          "Leaving EU will save Britons from vegans"
+          "The Referendum was influenced by aliens",
+          "The Referendum was influenced by vegans",
+          "The Referendum was influenced by cyclists",
+          "Leaving EU will save Britons from vegans",
+          "Leaving EU will save money",
+          "Leaving EU will improve security",
+          "Leaving EU will attract investors",
+          "Leaving EU will attract vegans",
+          "Leaving EU will attract vegans",
+          "Leaving EU will attract Russians"
         ]
 
         const solution1=["The Referendum","Leaving EU", "The British Parliment"]
@@ -78,11 +141,9 @@
           {text:"will repel",children:solution34 },
           {text:"will generate",children:solution35}
         ]
-        questions = shuffle(questions);
-        let candidateQuestions = questions.slice(0, 3);
-        $('#m1').text(candidateQuestions[0]);
-        $('#m2').text(candidateQuestions[1]);
-        $('#m3').text(candidateQuestions[2]);
+        showQuestions(questions);
+
+
         // console.log(questions);
         //var item = items[Math.floor(Math.random()*items.length)];
 
