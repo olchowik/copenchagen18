@@ -19,7 +19,9 @@ io.on('connection', function(socket){
   var thisUserId = nextUserId++;
   socketsByUserId[thisUserId] = socket;
   if (userWaitingForMatch) {
+    socketsByUserId[thisUserId].emit('control', 'youAreGuessing');
     guessingUsers.push(thisUserId);
+
     matchedUserId[userWaitingForMatch] = thisUserId;
     matchedUserId[thisUserId] = userWaitingForMatch;
 
@@ -28,7 +30,9 @@ io.on('connection', function(socket){
 
     userWaitingForMatch = null;
   } else {
+    socketsByUserId[thisUserId].emit('control', 'youAreKnowing');
     knowingUsers.push(thisUserId);
+    
     userWaitingForMatch = thisUserId;
   }
 

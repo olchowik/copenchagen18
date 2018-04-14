@@ -169,8 +169,17 @@
           window.scrollTo(0, document.body.scrollHeight);
         });
 
-        // Displaying other types of messages - debugging only now, this needs to be translated
-        // to events in the UI.
+        // Show different UI based on knower / guesser role.
+        socket.on('control', function(msg) {
+          if (msg === "youAreGuessing") {
+            console.log("You are guessing");
+          } else if (msg === "youAreKnowing") {
+            console.log("You are knowing");
+          }
+        });
+
+        // FOR DEBUGGING ONLY - replace this with UI events:
+        // Displaying other types of messages on the console
         socket.on('control', function(msg){
           $('#messages').append($('<li>').text("CONTROL: " + msg));
           window.scrollTo(0, document.body.scrollHeight);
@@ -183,6 +192,7 @@
           $('#messages').append($('<li>').text("SOLUTION: " + msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
+        // /DEBUGGING>
 
       });
     </script>
