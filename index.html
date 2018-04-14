@@ -32,7 +32,7 @@
             </span>
             <span id="chattimer"></span>
           </div>
-        <div id="hello"  class="card-body border-bottom">
+        <div id="hello"  class="card-body border-bottom" style="display:none;">
           <div id="pickMessage" class="text-center" style="display:none;">
             <h5 class="card-title">Pick a message:</h5>
             <button id="m1" type="button" class="d-block btn btn-lg btn-primary my-1 qb" style="margin:auto; min-width:700px">Primary</button>
@@ -51,6 +51,13 @@
             <form action="">
               <input id="m" autocomplete="off" /><button>Send</button>
             </form>
+          </div>
+          <div id="answerwindow"  lass="card-body border-top" style="display:none;">
+              <div class="row">
+                <div class="col-4">x</div>
+                <div class="col-4">x</div>
+                <div class="col-4">x</div>
+              </div>
           </div>
           <div class="card-footer text-muted">
               Censorship simulator made at Nordic Game Jam.
@@ -88,6 +95,7 @@
       }
 
       function showQuestions(questions){
+          $('#hello').show()
           questions = shuffle(questions);
           let candidateQuestions = questions.slice(0, 3);
           $('#m1').text(candidateQuestions[0]);
