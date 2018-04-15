@@ -13,14 +13,16 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      .btn{ white-space: normal;}
       #messages { margin-bottom: 40px }
       .qb {
         margin:auto; 
-        min-width:700px;
+        min-width:100%;
         }
       #chattimer {
         float:right;
       }
+      .sol{ width:100%; margin:auto;}
     </style>
   </head>
   <body>
@@ -35,9 +37,9 @@
         <div id="hello"  class="card-body border-bottom" style="display:none;">
           <div id="pickMessage" class="text-center" style="display:none;">
             <h5 class="card-title">Pick a message:</h5>
-            <button id="m1" type="button" class="d-block btn btn-lg btn-primary my-1 qb" style="margin:auto; min-width:700px">Primary</button>
-            <button id="m2" type="button" class="d-block btn btn-lg btn-secondary my-1 qb" style="margin:auto">Secondary</button>
-            <button id="m3" type="button" class="d-block btn btn-lg btn-success my-1 qb" style="margin:auto">Success</button>
+            <button id="m1" type="button" class="d-block btn btn-lg btn-primary my-1 qb" >Primary</button>
+            <button id="m2" type="button" class="d-block btn btn-lg btn-secondary my-1 qb" >Secondary</button>
+            <button id="m3" type="button" class="d-block btn btn-lg btn-success my-1 qb" >Success</button>
           </div>
           <div id="MessagePicked"  style="display:none;">
             Message to pass: 
@@ -54,9 +56,18 @@
           </div>
           <div id="answerwindow"  lass="card-body border-top" style="display:none;">
               <div class="row">
-                <div class="col-4">x</div>
-                <div class="col-4">x</div>
-                <div class="col-4">x</div>
+                <div class="col-4" >
+                    <div id="ans1" class="sol btn-group btn-group-vertical" role="group">
+                    </div>
+                </div>
+                <div class="col-4"  >
+                    <div id="ans2" class="sol btn-group btn-group-vertical" role="group">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div id="ans3" class="sol btn-group btn-group-vertical" role="group">
+                    </div>
+                </div>
               </div>
           </div>
           <div class="card-footer text-muted">
@@ -83,38 +94,6 @@
         }
         return array;
       }
-      var socket = io();
-      function onQuestionPicked(e){
-       // console.log($(e.target).text());
-        const msg = $(e.target).text();
-        $('#MessagePicked').text('Message to pass: '+msg);
-        $('#pickMessage').hide();
-        $('#MessagePicked').show();
-        socket.emit("riddle", msg);
-                  
-      }
-
-      function showQuestions(questions){
-          $('#hello').show()
-          questions = shuffle(questions);
-          let candidateQuestions = questions.slice(0, 3);
-          $('#m1').text(candidateQuestions[0]);
-          $('#m2').text(candidateQuestions[1]);
-          $('#m3').text(candidateQuestions[2]);
-          $('#m1').on('click',onQuestionPicked)
-          $('#m2').on('click',onQuestionPicked)
-          $('#m3').on('click',onQuestionPicked)
-          $('#pickMessage').show();
-      }
-
-      $(function () {
-
-        timerId=setInterval(e=>{
-          var date = new Date();
-          var n = date.toDateString();
-          var time = date.toLocaleTimeString();
-          $('#chattimer').text(n+' '+time)
-        });
       let questions=[
         "The Referendum was not influenced by Cambridge Analytica",
         "The Referendum was influenced by Cambridge Analytica",
@@ -140,18 +119,89 @@
       const solution33=["security"]
       const solution34=["investors", "Russians", "aliens", "vegans", "cyclists"]
       const solution35=["jobs", "travel problems"]
-      
+     //   {text:"will improve", children:solution33}, 
       const solution2=[
         {text:"was not influenced by",children:solution31}, 
         {text:"was influenced by",children:solution31}, 
         {text:"will save", children:solution32}, 
-        {text:"will improve", children:solution33},
         {text:"will attract",children:solution34},
         {text:"will repel",children:solution34 },
         {text:"will generate",children:solution35}
       ]
       
       //var item = items[Math.floor(Math.random()*items.length)];
+      var socket = io();
+      function onQuestionPicked(e){
+       // console.log($(e.target).text());
+        const msg = $(e.target).text();
+        $('#MessagePicked').text('Message to pass: '+msg);
+        $('#pickMessage').hide();
+        $('#MessagePicked').show();
+        socket.emit("riddle", msg);
+                  
+      }
+
+      function showQuestions(questions){
+          $('#hello').show()
+          questions = shuffle(questions);
+          let candidateQuestions = questions.slice(0, 3);
+          $('#m1').text(candidateQuestions[0]);
+          $('#m2').text(candidateQuestions[1]);
+          $('#m3').text(candidateQuestions[2]);
+          $('#m1').on('click',onQuestionPicked)
+          $('#m2').on('click',onQuestionPicked)
+          $('#m3').on('click',onQuestionPicked)
+          $('#pickMessage').show();
+      }
+      let proposedSolution=[];
+      function guess(event,text, index){
+        proposedSolution[index-1]=text;
+        console.log(event.target);
+        $('#ans'+index+' button').each((idx, e)=>{
+          e==event.target?$(e).removeClass('btn-warning').addClass('btn-success'):$(e).removeClass('btn-success').addClass('btn-warning')
+        });
+        //unpress all buttons, press button
+      }
+      function showLastAnsw(event,text){
+        console.log('showLastAnsw')
+        $('#ans2').empty();
+        //find var for text
+        let thirdColumnData=solution2.find(e=>e.text==text);
+        thirdColumnData=thirdColumnData.children;
+        //create 3rd column again based on var
+      }
+
+      function showAnswers(){
+        const answerwindow=$('#answerwindow')
+        answerwindow.show()
+        solution1.forEach(text=>{
+          let el=$('<button type="button" class="my-1 mx-2 btn btn-warning">'+text+'</button>');
+          el.on('click', event=>{guess(event,text, 1)} );
+          $('#ans1').append(el);
+        });
+        solution2.forEach(text=>{
+          let el=$('<button type="button" class="my-1 mx-2 btn btn-warning">'+text.text+'</button>');
+          el.on('click', event=>{guess(event,text, 2)} );
+          el.on('click', event=>{showLastAnsw(event,text, 2)} );
+          $('#ans2').append(el);
+        });
+        solution31.forEach(text=>{
+          let el=$('<button type="button" class="my-1 mx-2 btn btn-warning">'+text+'</button>');
+          el.on('click', event=>{guess(event,text, 3)} );
+          $('#ans3').append(el);
+        });
+        //insert button groups
+        //add event listeners that...
+        //insert butttons with event listeners
+      }
+      $(function () {
+
+        timerId=setInterval(e=>{
+          var date = new Date();
+          var n = date.toDateString();
+          var time = date.toLocaleTimeString();
+          $('#chattimer').text(n+' '+time)
+        });
 
         
         $('form').submit(function(){
@@ -178,7 +228,7 @@
         // Show different UI based on knower / guesser role.
         socket.on('control', function(msg) {
           if (msg === "youAreGuessing") {
-           //showAnswers(questions);
+            showAnswers();
             console.log("You are guessing");
           } else if (msg === "youAreKnowing") {
             showQuestions(questions);
@@ -189,7 +239,8 @@
         // FOR DEBUGGING ONLY - replace this with UI events:
         // Displaying other types of messages on the console
         socket.on('control', function(msg){
-          $('#messages').append($('<li>').text("CONTROL: " + msg));
+   
+          $('#messages').append($('<li>').text("CONTROL: " + msg.split(/(?=[A-Z])/).join(" ") ));
           window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on('riddle', function(msg){
