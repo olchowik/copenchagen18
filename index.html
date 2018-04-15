@@ -51,10 +51,11 @@
       
           <div id="formwindow"  class="card-body">
             <form action="">
-              <input id="m" autocomplete="off" /><button>Send</button>
+              <input id="m" autocomplete="off" style="min-width:80%"/>
+              <button style="min-width:19%">Send</button>
             </form>
           </div>
-          <div id="answerwindow"  lass="card-body border-top" style="display:none;">
+          <div id="answerwindow"  class="card-body border-top" style="display:none;">
               <div class="row">
                 <div class="col-4" >
                     <div id="ans1" class="sol btn-group btn-group-vertical" role="group">
@@ -160,15 +161,27 @@
         $('#ans'+index+' button').each((idx, e)=>{
           e==event.target?$(e).removeClass('btn-warning').addClass('btn-success'):$(e).removeClass('btn-success').addClass('btn-warning')
         });
+        console.log("proposedSolution",proposedSolution)
+        if (index==3){
+          socket.emit('solution', proposedSolution.join(' '));
+        }
         //unpress all buttons, press button
       }
       function showLastAnsw(event,text){
         console.log('showLastAnsw')
-        $('#ans2').empty();
+        $('#ans3').empty();
         //find var for text
-        let thirdColumnData=solution2.find(e=>e.text==text);
-        thirdColumnData=thirdColumnData.children;
+        let thirdColumnData=solution2.find(e=>{
+          return e.text==text
+        });
+        console.log(thirdColumnData.children)
         //create 3rd column again based on var
+        thirdColumnData.children.forEach(text=>{
+          let el=$('<button type="button" class="my-1 mx-2 btn btn-warning">'+text+'</button>');
+          el.on('click', event=>{guess(event,text, 3)} );
+          
+          $('#ans3').append(el);
+        });
       }
 
       function showAnswers(){
@@ -181,8 +194,8 @@
         });
         solution2.forEach(text=>{
           let el=$('<button type="button" class="my-1 mx-2 btn btn-warning">'+text.text+'</button>');
-          el.on('click', event=>{guess(event,text, 2)} );
-          el.on('click', event=>{showLastAnsw(event,text, 2)} );
+          el.on('click', event=>{guess(event,text.text, 2)} );
+          el.on('click', event=>{showLastAnsw(event,text.text, 2)} );
           $('#ans2').append(el);
         });
         solution31.forEach(text=>{
