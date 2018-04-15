@@ -20,7 +20,26 @@ app.get('/', function(req, res){
 //lowercase only!
 const forbiddenWords = [
   'referendum',
-  'facebook'
+  'facebook',
+  'leave',
+  'european',
+  'union',
+  'eu',
+  'cambridge',
+  'analytica',
+  'europe',
+  'security',
+  'invest',
+  'vegan',
+  'russia',
+  'queen',
+  'alien',
+  'migrant',
+  'bicycle',
+  'bike',
+  'cyclist',
+  'jobs',
+  'travel'
 ]
 
 function shouldBeCensored(message) {
