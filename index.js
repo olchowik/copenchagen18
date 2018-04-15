@@ -1,7 +1,9 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var distance = require('jaro-winkler');
 var port = process.env.PORT || 3000;
+
 
 var nextUserId = 1;
 var socketsByUserId = {}
@@ -14,6 +16,23 @@ var riddleForKnowingUser = {};
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
+
+//lowercase only!
+const forbiddenWords = [
+  'referendum',
+  'facebook'
+]
+
+function shouldBeCensored(message) {
+  split = message.split(" ");
+  maxDistance = 0;
+  for (let i = 0; i < split.length; i++) {
+    for (let f = 0; f < forbiddenWords.length; f++) {
+      maxDistance = Math.max(maxDistance, distance(split[i], forbiddenWords[f]));
+    }
+  }
+  return maxDistance > 0.8;
+}
 
 io.on('connection', function(socket){
   var thisUserId = nextUserId++;
@@ -38,8 +57,12 @@ io.on('connection', function(socket){
 
   socket.on('chat message', function(msg){
     if (matchedUserId[thisUserId]) {
-      socketsByUserId[matchedUserId[thisUserId]].emit('chat message', msg);
-      socketsByUserId[thisUserId].emit('chat message', msg);
+      if (shouldBeCensored(msg)) {
+        socketsByUserId[thisUserId].emit('control', 'censored');
+      } else {
+        socketsByUserId[matchedUserId[thisUserId]].emit('chat message', msg);
+        socketsByUserId[thisUserId].emit('chat message', msg);
+      }
     } else {
       socketsByUserId[thisUserId].emit('control', 'noMatchYet');
     }
