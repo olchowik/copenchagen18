@@ -230,18 +230,33 @@
           if (msg === "youAreGuessing") {
             showAnswers();
             console.log("You are guessing");
+            $('#messages').append($('<li>').html("<b>Try to guess the message from the other person.</b>"));
           } else if (msg === "youAreKnowing") {
             showQuestions(questions);
             console.log("You are knowing");
+            $('#messages').append($('<li>').html("<b>Try to pass the message to the other person.</b>"));
+          } else if (msg === "userMatched") {
+            $('#messages').append($('<li>').html("<b>Connected with [redacted]</b>"));
+          } else if (msg === "noMatchYet") {
+            $('#messages').append($('<li>').html("<b>Not connected with anyone, please wait...</b>"));
+          } else if (msg === "otherUserDisconnected") {
+            $('#messages').append($('<li>').html("<b>[redacted] has left the conversation.</b>"));
+          } else if (msg === "guessedCorrectly") {
+            $('#messages').append($('<li>').html("<b>The message has been guessed correctly!</b>"));
+          } else if (msg === "guessedIncorrectly") {
+            $('#messages').append($('<li>').html("<b>The message has not been guessed correctly.</b>"));
+          } else if (msg === "censored") {
+            $('#messages').append($('<li>').html("<b>There have been technical problems with delivering the last message.</b>"));
+          } else {
+            $('#messages').append($('<li>').html("control: " + msg));
           }
+          window.scrollTo(0, document.body.scrollHeight);
         });
 
         // FOR DEBUGGING ONLY - replace this with UI events:
         // Displaying other types of messages on the console
         socket.on('control', function(msg){
    
-          $('#messages').append($('<li>').text("CONTROL: " + msg.split(/(?=[A-Z])/).join(" ") ));
-          window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on('riddle', function(msg){
           $('#messages').append($('<li>').text("RIDDLE: " + msg));
