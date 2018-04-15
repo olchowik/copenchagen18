@@ -39,7 +39,8 @@ const forbiddenWords = [
   'bike',
   'cyclist',
   'jobs',
-  'travel'
+  'travel',
+  'influence'
 ]
 
 function shouldBeCensored(message) {
