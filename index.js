@@ -19,28 +19,30 @@ app.get('/', function(req, res){
 
 //lowercase only!
 const forbiddenWords = [
-  'referendum',
-  'facebook',
-  'leave',
+  'uk', 'british','britons', 'commonwealth','england','united','kingdom',
+  'referendum', "vote", "public", "plebiscite", "ballot", "poll",
+  'facebook','network',
+  'leave','remain','quit',
   'european',
   'union',
   'eu',
-  'cambridge',
-  'analytica',
+  'cambridge','oxford',
+  'analytica','analysis',
   'europe',
   'security',
   'invest',
-  'vegan',
-  'russia',
-  'queen',
-  'alien',
+  'vegan','meat','wegetarian',
+  'russia','putin','soviet','east',
+  'queen',	'monarch', 'sovereign', 'ruler','head', 'elizabeth',
+  'alien','ufo','planet','foreign',
   'migrant',
-  'bicycle',
+  'bicycle','cycle',
   'bike',
+  'money','cash',
   'cyclist',
-  'jobs',
-  'travel',
-  'influence'
+  'jobs','employment',
+  'travel','hollidays',
+  'influence', 'temper','impact'
 ]
 
 function shouldBeCensored(message) {

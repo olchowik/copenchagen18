@@ -163,7 +163,7 @@
           e==event.target?$(e).removeClass('btn-warning').addClass('btn-success'):$(e).removeClass('btn-success').addClass('btn-warning')
         });
         console.log("proposedSolution",proposedSolution)
-        if (index==3){
+        if (index==3 && proposedSolution[0]&&proposedSolution[1] ){
           socket.emit('solution', proposedSolution.join(' '));
         }
         //unpress all buttons, press button
